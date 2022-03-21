@@ -2,6 +2,7 @@
 Create a file for each owner of an SP that was paired with an
 S360 SP. Output to configuration principals.ownerMap
 """
+
 import os
 import json
 import sys
@@ -20,7 +21,7 @@ if "ownerMap" not in cfg.principals:
     raise Exception("Missing roleDirectory from principals")
 
 # Get paths and ensure owner_path exists for output
-owner_path = "./" + cfg.principals["ownerMap"] 
+owner_path = "./" + cfg.principals["ownerMap"]
 map_path = "./" + cfg.principals["mapDirectory"]
 PathUtils.ensure_path(owner_path)
 
@@ -49,9 +50,9 @@ for match in map_files:
 
 # Using the map, create a file for each user/entity
 # that owns SP's so we know who to contact
-for entry in owner_map:
-    path = os.path.join(owner_path, entry + ".json")
+for entry, value in owner_map.items():
+    path = os.path.join(owner_path, f'{entry}.json')
     with open(path, "w") as output:
-        output.writelines(json.dumps(owner_map[entry],  indent=4))
+        output.writelines(json.dumps(value, indent=4))
 
 print("Done")

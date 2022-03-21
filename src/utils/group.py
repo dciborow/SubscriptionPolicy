@@ -31,10 +31,7 @@ class AzResourceGroup:
 
     @staticmethod
     def delete_group(group_name:str, sub_id: str):
-        print("Delete Resource Group: {} in {}".format(
-            group_name,
-            sub_id
-        ))
+        print(f"Delete Resource Group: {group_name} in {sub_id}")
         CmdUtils.get_command_output(
             [
                 "az",

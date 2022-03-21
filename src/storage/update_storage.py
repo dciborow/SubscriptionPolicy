@@ -31,6 +31,7 @@ Other options:
     OK GETS ALL
     az storage logging show --connection-string "CONN_STR"
 """
+
 import os
 import json
 import sys
@@ -103,6 +104,6 @@ for subid in cfg.subscriptions:
             )
 
         # Dump out the results for this sub
-        file_path = os.path.join(usable_path, "{}.json".format(subid))
+        file_path = os.path.join(usable_path, f"{subid}.json")
         with open(file_path, "w") as output_stats:
             output_stats.writelines(json.dumps(account_overview, indent=4))

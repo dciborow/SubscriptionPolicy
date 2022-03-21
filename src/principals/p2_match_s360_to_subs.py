@@ -4,6 +4,7 @@ Map S360 principals with the sub and collect owner information.
 NOTE> Requires that you first download the CSV from S360, see ReadMe 
 and run get_roles.py first.
 """
+
 import os
 import json
 import sys
@@ -25,7 +26,7 @@ if "mapDirectory" not in cfg.principals:
 if "roleDirectory" not in cfg.principals:
     raise Exception("Missing roleDirectory from principals")
 
-role_path = "./" + cfg.principals["roleDirectory"] 
+role_path = "./" + cfg.principals["roleDirectory"]
 map_path = "./" + cfg.principals["mapDirectory"]
 PathUtils.ensure_path(map_path)
 
@@ -39,7 +40,7 @@ warnings = S360Reader.read_file("./June16.csv")
 count = 0
 for sub in cfg.subscriptions:
     print("Matching S360 to actual sub", sub)
-    sub_file = os.path.join(role_path, "{}.json".format(sub))
+    sub_file = os.path.join(role_path, f"{sub}.json")
     applied = JsonFileUtil.read_file_as_generic_objects(sub_file)
 
     matches = []
@@ -71,11 +72,8 @@ for sub in cfg.subscriptions:
                 onwers = "UNK_" + warning.principalId
             """
 
-            command = "az role assignment delete --assignee {} --scope {} --role {}".format(
-                warning.principalId,
-                applied[warning.principalId].scope,
-                applied[warning.principalId].roleDefinitionId
-            )
+            command = f"az role assignment delete --assignee {warning.principalId} --scope {applied[warning.principalId].scope} --role {applied[warning.principalId].roleDefinitionId}"
+
 
             warned = {
                 "principalId" : warning.principalId,
@@ -89,6 +87,6 @@ for sub in cfg.subscriptions:
             matches.append(warned)
 
     print("Matched - ", len(matches))
-    matched_output = os.path.join(map_path, "{}.json".format(sub))
+    matched_output = os.path.join(map_path, f"{sub}.json")
     with open(matched_output, "w") as results:
         results.writelines(json.dumps(matches, indent=4))

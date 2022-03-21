@@ -36,9 +36,7 @@ class JsonFileUtil:
             roles = "\n".join(roles)
             roles = json.loads(roles)
 
-            count = 0
             for role in roles:
-                count += 1
                 jgen = GenericObjectJson(role)
                 """
                 Getting duplicates in particular where the same principal ID

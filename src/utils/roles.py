@@ -14,21 +14,12 @@ class AzRole:
         self.scope = None
 
     def get_delete_command(self):
-        command = "az role assignment delete --assignee {} --role {} --scope {} --subscription {}".format(
-            self.principalId,
-            self.roleDefinitionId,
-            self.scope, 
-            self.subscription
-        )
-        return command
+        return f"az role assignment delete --assignee {self.principalId} --role {self.roleDefinitionId} --scope {self.scope} --subscription {self.subscription}"
 
     def delete(self):
         command = self.get_delete_command()
         command = command.split(' ')
-        print("Deleting {} role for {}".format(
-            self.principalType,
-            self.principalName
-        ))
+        print(f"Deleting {self.principalType} role for {self.principalName}")
         CmdUtils.get_command_output(command,False)
 
     def _load_raw(self, az_role_json:dict):
@@ -51,7 +42,7 @@ class AzRolesUtils:
             ]
         )
 
-        if raw is True:
+        if raw:
             return output
 
         return AzRolesUtils._convert_raw_roles(output, sub_id)
@@ -72,7 +63,7 @@ class AzRolesUtils:
             ]
         )
 
-        if raw is True:
+        if raw:
             return output
 
         return AzRolesUtils._convert_raw_roles(output, sub_id)

@@ -5,6 +5,7 @@ to map service princpals to.
 You need to provide the output directory of the match_s360_to_subs.py
 which if unchanged is raw_matched.
 """
+
 import os
 import sys
 sys.path.insert(0, "..")
@@ -111,15 +112,9 @@ for principal in cleanup_map:
             cleanup = cleanup.replace("'", "")
             cleanup = cleanup.replace('"', "")
 
-            deletion_command = "{} --subscription {}".format(
-                cleanup,
-                sub
-            )
+            deletion_command = f"{cleanup} --subscription {sub}"
 
-            print("Removing principal {} from {}".format(
-                principal,
-                sub
-            ))
+            print(f"Removing principal {principal} from {sub}")
             print("\t{}".format(deletion_command))
 
             commands = deletion_command.split(' ')

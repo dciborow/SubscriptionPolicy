@@ -31,11 +31,7 @@ class AzLockUtils:
         )
 
         if locks and len(locks):
-            for lock in locks:
-                return_locks.append(
-                    AzLock(sub_id, lock)
-                )
-
+            return_locks.extend(AzLock(sub_id, lock) for lock in locks)
         return return_locks
 
 

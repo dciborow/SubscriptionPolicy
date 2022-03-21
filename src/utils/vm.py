@@ -13,7 +13,7 @@ class Compute:
         self.powerState = None
 
     def deallocate(self):
-        print("Deallocating {} in sub {}".format(self.name, self.subscription))
+        print(f"Deallocating {self.name} in sub {self.subscription}")
         """
         UNCOMMENT WHEN READY TO ACTUALLY USE
         CmdUtils.get_command_output(
@@ -53,7 +53,7 @@ class ComputeUtil:
             regions[vm.location] += 1
 
 
-        report = {
+        return {
             "overall" : {
                 "total" : len(compute_list),
                 "managed" : len(managed_compute)
@@ -69,8 +69,6 @@ class ComputeUtil:
                 "managed" : running_names_managed
             }
         }
-
-        return report
 
 
     @staticmethod
@@ -110,11 +108,10 @@ class ComputeUtil:
             current_comp.managedGroup = group_states[current_comp.resourceGroup]
 
             if current_comp.managedGroup is None or get_power_for_managed:
-                print("Power state of {} - {}".format(
-                    "managed" if current_comp.managedGroup is not None else "unmanaged",
-                    current_comp.name
-                    )
+                print(
+                    f'Power state of {"managed" if current_comp.managedGroup is not None else "unmanaged"} - {current_comp.name}'
                 )
+
 
                 instance = CmdUtils.get_command_output(
                     [
@@ -131,7 +128,7 @@ class ComputeUtil:
                 )
 
                 current_comp.powerState = instance["instanceView"]["statuses"][1]["code"]
-            
+
             return_computes.append(current_comp)
 
         return return_computes

@@ -9,6 +9,7 @@ Configuration Settings
 Outputs all data into 
     ./[principals.roleDirectory]/[subid].json
 """
+
 import os
 import json
 import sys
@@ -32,7 +33,7 @@ if "delete_on_missing" not in cfg.tagging:
 if "tagDirectory" not in cfg.tagging:
     raise Exception("Missing tagDirectory from tagging")
 
-tagging_path = "./" + cfg.tagging["tagDirectory"] 
+tagging_path = "./" + cfg.tagging["tagDirectory"]
 PathUtils.ensure_path(tagging_path)
 
 if cfg.tagging["delete_on_missing"]:
@@ -49,18 +50,17 @@ untaggedZ=0
 ignoredZ=0
 for subid in cfg.subscriptions:
 
-    output = {
-        "totalGroups" : 0,
-        "untaggedGroups" : 0,
-        "managedGroups" : 0,
-        "ignoredGroups" : 0,
-        "untagged" : []
-    }
-
     print("Getting reource groups for", subid)
     groups = AzResourceGroup.get_groups(subid)
 
-    output["totalGroups"] = len(groups)
+    output = {
+        "untaggedGroups": 0,
+        "managedGroups": 0,
+        "ignoredGroups": 0,
+        "untagged": [],
+        "totalGroups": len(groups),
+    }
+
     for group in groups:
         ignored = False
         for ignored_name in cfg.tagging["ignored"]:
@@ -88,7 +88,7 @@ for subid in cfg.subscriptions:
         if flag_untagged:
             output["untaggedGroups"] += 1
             output["untagged"].append(group["name"])
-                
+
             if cfg.tagging["delete_on_missing"] is True:
                 print("Deleting ", group["name"])
 
@@ -102,10 +102,10 @@ for subid in cfg.subscriptions:
                 # AzResourceGroup.delete_group(group["name"], subid)        
 
     totalZ += output["totalGroups"]
-    untaggedZ +=  output["untaggedGroups"] 
-    ignoredZ += output["ignoredGroups"] 
+    untaggedZ +=  output["untaggedGroups"]
+    ignoredZ += output["ignoredGroups"]
     managedZ += output["managedGroups"]
-    file_path = os.path.join(tagging_path, "{}.json".format(subid))
+    file_path = os.path.join(tagging_path, f"{subid}.json")
     with open(file_path, "w") as output_file:
         output_file.writelines(json.dumps(output, indent=4))
 

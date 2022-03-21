@@ -9,6 +9,7 @@ Configuration Settings
 Outputs all data into 
     ./[principals.roleDirectory]/[subid].json
 """
+
 import os
 import sys
 import json
@@ -31,10 +32,8 @@ PathUtils.ensure_path(usable_path)
 
 for subid in cfg.subscriptions:
     print("Getting role assigments for", subid)
-    output = AzRolesUtils.get_all_roles(subid, True)
-    
-    if output:
-        file_path = os.path.join(usable_path, "{}.json".format(subid))
+    if output := AzRolesUtils.get_all_roles(subid, True):
+        file_path = os.path.join(usable_path, f"{subid}.json")
         with open(file_path, "w") as out_file:
             out_file.writelines(json.dumps(output, indent=4))
 

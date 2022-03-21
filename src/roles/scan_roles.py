@@ -9,6 +9,7 @@ Configuration Settings
 Outputs all data into 
     ./[principals.roleDirectory]/[subid].json
 """
+
 import os
 import sys
 import json
@@ -36,7 +37,7 @@ for subid in cfg.subscriptions:
     users = {}
     groups = []
     types_coll = {}
-    
+
     types = [x.principalType for x in output]
     for t in types:
         if t not in types_coll:
@@ -64,14 +65,14 @@ for subid in cfg.subscriptions:
 
             if toadd not in groups:
                 groups.append(toadd)
-        
+
     output_data = {
         "Summary" : types_coll,
         "Groups" : groups,
         "Users" : users
     }        
 
-    file_path = os.path.join(usable_path, "{}.json".format(subid))
+    file_path = os.path.join(usable_path, f"{subid}.json")
     with open(file_path, "w") as summary_report:
         summary_report.writelines(
             json.dumps(output_data, indent=4)

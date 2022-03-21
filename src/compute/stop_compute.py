@@ -43,16 +43,13 @@ for subid in cfg.subscriptions:
     computes = ComputeUtil.get_compute(subid, cfg.compute["include_managed_compute"])
     stop = perf_counter()
 
-    print("Took {} to get {}".format(
-        stop-start,
-        len(computes)
-    ))
+    print(f"Took {stop - start} to get {len(computes)}")
 
     report = ComputeUtil.parse_compute_to_report(computes)
     total_computes += report["overall"]["total"]
     running_computes += report["states"]["running"]
 
-    file_name = os.path.join(usable_path, "{}.txt".format(subid))
+    file_name = os.path.join(usable_path, f"{subid}.txt")
     with open(file_name, "w") as output_file:
         output_file.writelines(json.dumps(report, indent=4))
 
@@ -64,5 +61,5 @@ for subid in cfg.subscriptions:
             rvm.deallocate()
 
 total_end = perf_counter()
-print("All processing took {}".format(total_end-total_start))
-print("Total {} running {}".format(total_computes, running_computes))
+print(f"All processing took {total_end - total_start}")
+print(f"Total {total_computes} running {running_computes}")
